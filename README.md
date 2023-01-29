@@ -21,7 +21,7 @@ a private custom payload for hak5 packetsquirrel
 
 然后再修改如下字段中的IP地址为实际使用的静态IP地址
 
-- 第 22 到 25 行
+- 第 22 到 25 行 - NAT/VPN模式，修改 `Ethernet Out` 接口为静态IP地址
 
 ```
 uci set network.wan.ipaddr='192.168.1.100'
@@ -30,7 +30,7 @@ uci set network.wan.gateway='192.168.1.1'
 uci set network.wan.dns='8.8.8.8 8.8.4.4'
 ```
 
-- 第 33 到 36 行
+- 第 33 到 36 行 - 桥接模式，修改桥接接口为静态IP地址
 
 ```
 uci set network.lan.ipaddr='192.168.1.110'
