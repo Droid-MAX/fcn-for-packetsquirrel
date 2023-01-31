@@ -9,9 +9,10 @@ a private custom payload for hak5 packetsquirrel
 
 先将PacketSquirrel切换到Arming模式，上电启动后将 `payload.sh`，`fcn`，`fcn.conf` 这三个文件下载并部署到 `/root/payloads/switch3/` 目录下，替换掉原有的OpenVPN payload，然后分别设置好文件权限：
 
-`chmod 755 /root/payloads/switch3/{payload.sh,fcn}`
-
-`chmod 644 /root/payloads/switch3/fcn.conf`
+```
+chmod 755 /root/payloads/switch3/{payload.sh,fcn}
+chmod 644 /root/payloads/switch3/fcn.conf
+```
 
 `Ethernet Out` 接口联网模式默认为 `DHCP客户端模式`，DNS服务器默认使用的是 `8.8.8.8`，上电后等到LED灯亮 `青色` 时(持续5秒)按下 `BUTTON按键`，就会配置为 `NAT模式`，如果没有按键操作的话，就会配置为 `桥接模式`
 
@@ -19,7 +20,7 @@ a private custom payload for hak5 packetsquirrel
 
 **修改为静态地址**
 
-将 `payload.sh` 中的 `DHCP_MODE` 变量的值修改为 0
+将 `payload.sh` 启动脚本中的 `DHCP_MODE` 变量的值修改为 0
 
 然后再修改如下字段中的IP地址为实际使用的静态IP地址
 
@@ -50,7 +51,7 @@ uci set network.lan.dns='8.8.8.8 8.8.4.4'
 [name]=SERVER_NAME
 [psk]=SERVER_PASS
 [uic]=UNIQUE_CODE
-[host]=vip.xfconnect.com
+#[host]=vip.xfconnect.com
 #[client]=0
 #[udp]=1
 #[tls]=1
@@ -76,7 +77,7 @@ uci set network.lan.dns='8.8.8.8 8.8.4.4'
 ##############################
 ```
 
-前5行为必填项，相关配置参数需从FCN运营方购得付费账号后方可继续
+前4行为必填项，相关配置参数需从FCN运营方购得付费账号后方可继续
 
 ***自定义FCN服务端路由推送***
 
@@ -92,4 +93,49 @@ uci set network.lan.dns='8.8.8.8 8.8.4.4'
 192.168.1.0/255.255.255.0
 172.16.0.0/255.240.0.0
 10.0.0.0/255.255.255.0
+```
+
+**FCN客户端配置**
+
+修改 `fcn.conf` 配置文件
+
+```
+[uid]=USER_ID
+[name]=SERVER_NAME
+[psk]=SERVER_PASS
+#[uic]=UNIQUE_CODE
+#[host]=vip.xfconnect.com
+[client]=1
+#[udp]=1
+#[tls]=1
+#[log]=fcn.log
+#[authfile]=users
+#[nat_nic]=eth0
+#[notun]=1
+#[tport]=8000
+#[uport]=5000
+#[compress]=1
+##############################
+#[dhcp_ip]=10.10.0.1
+#[dhcp_mask]=255.255.255.0
+#[dhcp_dns]=223.5.5.5
+#[route]=
+#192.168.1.0/255.255.255.0
+##############################
+#[proxy]=socks5
+#[proxy_host]=
+#[proxy_port]=
+#[proxy_usr]=
+#[proxy_psk]=
+##############################
+```
+
+除必填项之外，还需要取消 `[client]` 所在行的注释，并将其值改为 `1`
+
+将 `payload.sh` 启动脚本中对应的VPN虚拟网卡接口名称修改为 `fcn_tun`
+
+- 第 19 行 - NAT/VPN模式，修改VPN虚拟网卡接口名称
+
+```
+uci set network.vpn.ifname='fcn_tun'
 ```
