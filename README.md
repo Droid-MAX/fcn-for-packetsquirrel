@@ -20,7 +20,7 @@ chmod 644 /root/payloads/switch3/fcn.conf
 
 **修改为静态地址**
 
-将 `payload.sh` 启动脚本中的 `DHCP_MODE` 变量的值修改为 0
+将 `payload.sh` 启动脚本中的 `DHCP_CLIENT` 变量的值修改为 0
 
 然后再修改如下字段中的IP地址为实际使用的静态IP地址
 
